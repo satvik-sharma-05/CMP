@@ -13,6 +13,8 @@ import api from '../services/api';
 import KPISummary from '../components/dashboard/KPISummary';
 import BillingChart from '../components/dashboard/BillingChart';
 import AvailabilityChart from '../components/dashboard/AvailabilityChart';
+import ExperienceChart from '../components/dashboard/ExperienceChart';
+import UnbilledChart from '../components/dashboard/UnbilledChart';
 
 function TabPanel({ children, value, index, ...other }) {
   return (
@@ -89,14 +91,28 @@ const Dashboard = () => {
         >
           <Tab label="Billing Summary" />
           <Tab label="Availability Breakdown" />
+          <Tab label="Experience Breakdown" />
+
         </Tabs>
 
         <TabPanel value={tabValue} index={0}>
-          <BillingChart data={stats?.billingStats} loading={loading} />
+          <Grid container spacing={3}>
+            <Grid item xs={12} md={6}>
+              <BillingChart data={stats?.billingStats} loading={loading} />
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <UnbilledChart data={stats?.availabilityStats} loading={loading} />
+            </Grid>
+          </Grid>
         </TabPanel>
+
         <TabPanel value={tabValue} index={1}>
           <AvailabilityChart data={stats?.availabilityStats} loading={loading} />
         </TabPanel>
+        <TabPanel value={tabValue} index={2}>
+          <ExperienceChart data={stats?.experienceStats} loading={loading} />
+        </TabPanel>
+
       </Paper>
 
       {stats?.skillsStats?.length > 0 && (

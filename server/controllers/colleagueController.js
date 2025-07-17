@@ -125,11 +125,37 @@ const exportColleaguesCSV = async (req, res) => {
     res.status(500).json({ message: 'Failed to export CSV' });
   }
 };
+// Get billing status summary
+const billingSummary = async (req, res) => {
+  try {
+    const summary = await Colleague.aggregate([
+      { $group: { _id: "$billingStatus", count: { $sum: 1 } } }
+    ]);
+    res.json(summary);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch billing summary', error: error.message });
+  }
+};
+
+// Get availability status summary
+const availabilitySummary = async (req, res) => {
+  try {
+    const summary = await Colleague.aggregate([
+      { $group: { _id: "$availability.status", count: { $sum: 1 } } }
+    ]);
+    res.json(summary);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch availability summary', error: error.message });
+  }
+};
+
 export {
   getAllColleagues,
   getColleagueById,
   createColleague,
   updateColleague,
+  billingSummary,
+  availabilitySummary,
   deleteColleague,
   exportColleaguesCSV
 };

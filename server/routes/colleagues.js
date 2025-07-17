@@ -5,7 +5,9 @@ import {
   createColleague,
   updateColleague,
   deleteColleague,
-  exportColleaguesCSV
+  exportColleaguesCSV,
+  billingSummary,
+  availabilitySummary
 } from '../controllers/colleagueController.js';
 import auth from '../middleware/auth.js';
 
@@ -17,11 +19,14 @@ router.route('/')
   .get(getAllColleagues)
   .post(createColleague);
 
-router.get('/export', exportColleaguesCSV); // ✅ ADD THIS
+router.get('/export', exportColleaguesCSV);
 
 router.route('/:id')
   .get(getColleagueById)
   .put(updateColleague)
   .delete(deleteColleague);
+
+router.get('/summary/billing', billingSummary);
+router.get('/summary/availability', availabilitySummary);
 
 export default router;

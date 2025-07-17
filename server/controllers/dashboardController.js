@@ -2,10 +2,11 @@ import Colleague from '../models/Colleague.js';
 
 const getDashboardStats = async (_req, res) => {
   try {
-    // Total colleagues
+    console.log('🔍 Fetching dashboard stats...');
+
     const totalColleagues = await Colleague.countDocuments();
-    
-    // Billing status breakdown
+    console.log('✅ totalColleagues:', totalColleagues);
+
     const billingStats = await Colleague.aggregate([
       {
         $group: {
@@ -14,8 +15,8 @@ const getDashboardStats = async (_req, res) => {
         }
       }
     ]);
-    
-    // Availability breakdown
+    console.log('✅ billingStats:', billingStats);
+
     const availabilityStats = await Colleague.aggregate([
       {
         $group: {
@@ -24,8 +25,19 @@ const getDashboardStats = async (_req, res) => {
         }
       }
     ]);
-    
-    // Skills distribution
+    console.log('✅ availabilityStats:', availabilityStats);
+
+    const unbilledStats = await Colleague.aggregate([
+      { $match: { billingStatus: 'UNBILLED' } },
+      {
+        $group: {
+          _id: '$availability.status',
+          count: { $sum: 1 }
+        }
+      }
+    ]);
+    console.log('✅ unbilledStats:', unbilledStats);
+
     const skillsStats = await Colleague.aggregate([
       { $unwind: '$skills' },
       {
@@ -37,8 +49,8 @@ const getDashboardStats = async (_req, res) => {
       { $sort: { count: -1 } },
       { $limit: 10 }
     ]);
-    
-    // Experience distribution
+    console.log('✅ skillsStats:', skillsStats);
+
     const experienceStats = await Colleague.aggregate([
       {
         $bucket: {
@@ -51,15 +63,18 @@ const getDashboardStats = async (_req, res) => {
         }
       }
     ]);
-    
+    console.log('✅ experienceStats:', experienceStats);
+
     res.json({
       totalColleagues,
       billingStats,
       availabilityStats,
+      unbilledStats,
       skillsStats,
       experienceStats
     });
   } catch (error) {
+    console.error('❌ Dashboard stats error:', error);
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 };

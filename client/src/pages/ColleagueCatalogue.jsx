@@ -1,12 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import {
   Container, Typography, Box, Button, Alert, Dialog, DialogTitle,
-  DialogContent, DialogActions, TextField, Paper, Snackbar, MenuItem, Select, InputLabel, FormControl,
+
+  DialogContent, DialogActions, TextField, Paper, Snackbar, MenuItem, Select, InputLabel, FormControl, 
+  Grid,
 } from '@mui/material';
 import { Add, GetApp } from '@mui/icons-material';
 import api from '../services/api';
 import FilterBar from '../components/catalogue/FilterBar';
 import ColleagueTable from '../components/catalogue/ColleagueTable';
+
+
+
+import Breadcrumbs from '../components/layout/Breadcrumbs';
 
 const ColleagueCatalogue = () => {
   const [colleagues, setColleagues] = useState([]);
@@ -21,6 +27,11 @@ const ColleagueCatalogue = () => {
   const [successMessage, setSuccessMessage] = useState('');
   const [openEdit, setOpenEdit] = useState(false);
   const [editColleague, setEditColleague] = useState(null);
+  const [viewMode, setViewMode] = useState('table'); // 'table' or 'card'
+
+
+
+
 
   const [newColleague, setNewColleague] = useState({
     firstName: '',
@@ -200,10 +211,24 @@ const ColleagueCatalogue = () => {
           <Typography variant="h4" sx={{ fontWeight: 'bold', color: 'primary.main' }}>
             Colleague Catalogue
           </Typography>
+          <Button
+            variant="outlined"
+            onClick={() => setViewMode(viewMode === 'table' ? 'card' : 'table')}
+          >
+            {viewMode === 'table' ? 'Switch to Card View' : 'Switch to Table View'}
+          </Button>
+
+
+
+
+
           <Box sx={{ display: 'flex', gap: 2 }}>
             <Button variant="outlined" startIcon={<GetApp />} onClick={handleExport}>Export CSV</Button>
             <Button variant="contained" startIcon={<Add />} onClick={() => setOpenAdd(true)}>Add Colleague</Button>
           </Box>
+
+
+
         </Box>
 
         {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
@@ -214,21 +239,53 @@ const ColleagueCatalogue = () => {
           onClearFilters={() => setFilters({})}
         />
 
-        <ColleagueTable
-          colleagues={colleagues}
-          loading={loading}
-          order={order}
-          orderBy={orderBy}
-          onRequestSort={handleRequestSort}
-          onView={(c) => alert(`${c.firstName} ${c.lastName}\nEmail: ${c.email}`)}
-          onEdit={(colleague) => {
-            setEditColleague({ ...colleague });
-            setOpenEdit(true);
-          }}
-          onDelete={handleDelete}
-          onToggleStatus={handleToggleStatus}
+        {viewMode === 'table' ? (
+  <ColleagueTable
+    colleagues={colleagues}
+    loading={loading}
+    order={order}
+    orderBy={orderBy}
+    onRequestSort={handleRequestSort}
+    onView={(c) => alert(`${c.firstName} ${c.lastName}\nEmail: ${c.email}`)}
+    onEdit={(colleague) => {
+      setEditColleague({ ...colleague });
+      setOpenEdit(true);
+    }}
+    onDelete={handleDelete}
+    onToggleStatus={handleToggleStatus}
+  />
+) : (
+  <Grid container spacing={2}>
+    {colleagues.map((colleague) => (
+      <Grid item xs={12} md={6} lg={4} key={colleague._id}>
+        <Paper elevation={3} sx={{ p: 2 }}>
+          <Typography variant="h6">{colleague.fullName}</Typography>
+          <Typography variant="body2">{colleague.email}</Typography>
+          <Typography variant="body2">Experience: {colleague.experienceInYears} years</Typography>
+          <Typography variant="body2">Manager: {colleague.managerId?.name || 'N/A'}</Typography>
+          <Typography variant="body2">Billing: {colleague.billingStatus}</Typography>
+          <Typography variant="body2">Status: {colleague.availability.status}</Typography>
+          <Typography variant="body2">Assignment: {colleague.assignment.name}</Typography>
+          <Box sx={{ mt: 1, display: 'flex', gap: 1 }}>
+            <Button size="small" onClick={() => alert(`${colleague.firstName} ${colleague.lastName}`)}>View</Button>
+            <Button size="small" onClick={() => {
+              setEditColleague({ ...colleague });
+              setOpenEdit(true);
+            }}>Edit</Button>
+            <Button size="small" color="error" onClick={() => handleDelete(colleague)}>Delete</Button>
+            <Button size="small" onClick={() => handleToggleStatus(colleague)}>
+              {colleague.availability.status === 'Deactivated' ? 'Activate' : 'Deactivate'}
+            </Button>
+          </Box>
+        </Paper>
+      </Grid>
+    ))}
+  </Grid>
+)}
 
-        />
+
+
+
       </Paper>
 
       {/* ✅ Delete Dialog */}
