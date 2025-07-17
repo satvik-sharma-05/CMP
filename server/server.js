@@ -12,7 +12,8 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.use(express.json());
+// ✅ Define allowed origins before using
+const allowedOrigins = ['https://frontend-a0mq.onrender.com'];
 
 app.use(cors({
   origin: function (origin, callback) {
@@ -22,15 +23,15 @@ app.use(cors({
       callback(new Error('Not allowed by CORS'));
     }
   },
-  credentials: true, // if you're using cookies/auth headers
+  credentials: true,
 }));
+
 
 
 // ✅ ✅ Register API Routes first!
 app.use('/api/auth', authRoutes);
 // ✅ Enable CORS for your frontend domain
 
-const allowedOrigins = ['https://frontend-a0mq.onrender.com'];
 
 
 
