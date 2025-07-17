@@ -14,13 +14,27 @@ const PORT = process.env.PORT || 5000;
 
 app.use(express.json());
 
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true, // if you're using cookies/auth headers
+}));
+
+
 // ✅ ✅ Register API Routes first!
 app.use('/api/auth', authRoutes);
 // ✅ Enable CORS for your frontend domain
-app.use(cors({
-  origin: 'https://cmp-frontend.onrender.com', // your frontend link
-  credentials: true
-}));
+
+const allowedOrigins = ['https://frontend-a0mq.onrender.com'];
+
+
+
+
 // ✅ Connect MongoDB
 mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
