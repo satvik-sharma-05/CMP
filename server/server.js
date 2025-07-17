@@ -31,6 +31,7 @@ app.use(cors({
 
 
 
+
 // ✅ ✅ Register API Routes first!
 app.use('/api/auth', authRoutes);
 app.use('/api/auth', authRoutes);
@@ -39,6 +40,7 @@ app.use('/api/colleagues', colleagueRoutes);
 app.use('/api/managers', managerRoutes);
 
 
+app.options('*', cors()); // Handle preflight
 
 
 
