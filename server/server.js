@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import cors from 'cors';
 
 import authRoutes from './routes/auth.js';
 
@@ -15,7 +16,11 @@ app.use(express.json());
 
 // ✅ ✅ Register API Routes first!
 app.use('/api/auth', authRoutes);
-
+// ✅ Enable CORS for your frontend domain
+app.use(cors({
+  origin: 'https://cmp-frontend.onrender.com', // your frontend link
+  credentials: true
+}));
 // ✅ Connect MongoDB
 mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
