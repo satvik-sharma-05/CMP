@@ -7,7 +7,10 @@ import { fileURLToPath } from 'url';
 import cors from 'cors';
 
 import authRoutes from './routes/auth.js';
-
+import dashboardRoutes from './routes/dashboard.js';
+import colleagueRoutes from './routes/colleagues.js';
+import managerRoutes from './routes/managers.js';
+// --- Setup ---
 dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
