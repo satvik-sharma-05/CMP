@@ -118,33 +118,33 @@ const ColleagueTable = ({
             <TableRow
               key={colleague._id}
               sx={{
-                opacity: colleague.availability.status === 'Deactivated' ? 0.5 : 1,
+                opacity: colleague.availability?.status === 'Deactivated' ? 0.5 : 1,
                 transition: 'opacity 0.4s ease'
               }}
             >
               <TableCell>
                 <Box display="flex" alignItems="center">
                   <Avatar sx={{ mr: 1 }}>
-                    {colleague.firstName[0]}
-                    {colleague.lastName[0]}
+                    {colleague.firstName?.[0] || ''}
+                    {colleague.lastName?.[0] || ''}
                   </Avatar>
                   <Box>
-                    <Typography variant="subtitle2">{colleague.fullName}</Typography>
+                    <Typography variant="subtitle2">{colleague.fullName || ''}</Typography>
                     <Typography variant="body2" color="textSecondary">
-                      {colleague.email}
+                      {colleague.email || ''}
                     </Typography>
                   </Box>
                 </Box>
               </TableCell>
 
-              <TableCell>{colleague.experienceInYears} years</TableCell>
+              <TableCell>{colleague.experienceInYears ?? '-'} years</TableCell>
               <TableCell>{colleague.managerId?.name || 'Not Assigned'}</TableCell>
 
               <TableCell>
-                {colleague.skills.slice(0, 2).map((skill, index) => (
+                {Array.isArray(colleague.skills) && colleague.skills.slice(0, 2).map((skill, index) => (
                   <Chip key={index} label={skill} size="small" sx={{ mr: 0.5 }} />
                 ))}
-                {colleague.skills.length > 2 && (
+                {Array.isArray(colleague.skills) && colleague.skills.length > 2 && (
                   <Chip
                     label={`+${colleague.skills.length - 2} more`}
                     size="small"
@@ -155,7 +155,7 @@ const ColleagueTable = ({
 
               <TableCell>
                 <Chip
-                  label={colleague.billingStatus.replace('_', ' ')}
+                  label={colleague.billingStatus ? colleague.billingStatus.replace('_', ' ') : ''}
                   color={getBillingStatusColor(colleague.billingStatus)}
                   size="small"
                 />
@@ -164,27 +164,27 @@ const ColleagueTable = ({
               <TableCell>
                 <Chip
                   label={
-                    colleague.availability.status === 'Deactivated'
+                    colleague.availability?.status === 'Deactivated'
                       ? 'Deactivated'
-                      : colleague.availability.availableInDays > 0
+                      : colleague.availability?.availableInDays > 0
                         ? `${colleague.availability.status} (${colleague.availability.availableInDays} days)`
-                        : colleague.availability.status
+                        : colleague.availability?.status || ''
                   }
                   color={
-                    colleague.availability.status === 'Deactivated'
+                    colleague.availability?.status === 'Deactivated'
                       ? 'default'
-                      : getAvailabilityColor(colleague.availability.status)
+                      : getAvailabilityColor(colleague.availability?.status)
                   }
-                  variant={colleague.availability.status === 'Deactivated' ? 'outlined' : 'filled'}
+                  variant={colleague.availability?.status === 'Deactivated' ? 'outlined' : 'filled'}
                   size="small"
                   sx={{
-                    fontStyle: colleague.availability.status === 'Deactivated' ? 'italic' : 'normal'
+                    fontStyle: colleague.availability?.status === 'Deactivated' ? 'italic' : 'normal'
                   }}
                 />
               </TableCell>
 
               <TableCell>
-                {colleague.assignment?.name !== 'None'
+                {colleague.assignment?.name && colleague.assignment.name !== 'None'
                   ? colleague.assignment.name
                   : 'Unassigned'}
               </TableCell>
@@ -195,9 +195,8 @@ const ColleagueTable = ({
                   onEdit={() => onEdit(colleague)}
                   onDelete={() => onDelete(colleague)}
                   onToggleStatus={() => onToggleStatus(colleague)}
-                  isDeactivated={colleague.availability.status === 'Deactivated'}
+                  isDeactivated={colleague.availability?.status === 'Deactivated'}
                 />
-
               </TableCell>
             </TableRow>
           ))}
