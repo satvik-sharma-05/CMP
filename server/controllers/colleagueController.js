@@ -31,7 +31,7 @@ const getAllColleagues = async (req, res) => {
 
     const colleagues = await colleaguesQuery;
 
-    res.json(colleagues);
+    res.json({ colleagues });
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
