@@ -9,14 +9,16 @@ const login = async (req, res) => {
   try {
     const { username, password } = req.body;
 
+    console.log('Login attempt:', username);
+
     const user = await User.findOne({ username });
+
+    // Debug print user
+    console.log('User found:', user);
+
     if (!user || !(await user.matchPassword(password))) {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
-    // BAD: Only for testing!
-    // if (!user || user.password !== password) {
-    //   return res.status(401).json({ message: 'Invalid credentials' });
-    // }
 
     const token = generateToken(user._id);
 
@@ -25,13 +27,15 @@ const login = async (req, res) => {
       user: {
         id: user._id,
         username: user.username,
-        role: user.role
-      }
+        role: user.role,
+      },
     });
   } catch (error) {
+    console.error('🔥 Login Error:', error);
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
+
 
 const register = async (req, res) => {
   try {
