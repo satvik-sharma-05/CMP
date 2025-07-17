@@ -119,13 +119,11 @@ const ColleagueTable = ({
               <TableRow
                 key={colleague._id}
                 sx={{
-                  opacity: colleague.availability?.status === 'Deactivated'
-                    ? 'Deactivated'
-                    : (colleague.availability?.availableInDays && colleague.availability.availableInDays > 0)
-                      ? `${colleague.availability.status} (${colleague.availability.availableInDays} days)`
-                      : colleague.availability?.status || '',
+                  opacity: colleague.availability?.status === 'Deactivated' ? 0.5 : 1,
                   transition: 'opacity 0.4s ease'
                 }}
+
+
               >
                 <TableCell>
                   <Box display="flex" alignItems="center">
