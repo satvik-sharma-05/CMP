@@ -30,7 +30,10 @@ app.use(cors({
 
 // ✅ ✅ Register API Routes first!
 app.use('/api/auth', authRoutes);
-// ✅ Enable CORS for your frontend domain
+app.use('/api/auth', authRoutes);
+app.use('/api/dashboard', dashboardRoutes);
+app.use('/api/colleagues', colleagueRoutes);
+app.use('/api/managers', managerRoutes);
 
 
 
