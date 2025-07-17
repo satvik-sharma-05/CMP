@@ -1,9 +1,17 @@
 {
   "name": "cmp-fullstack",
   "version": "1.0.0",
+  "type": "module",
   "scripts": {
-    "start": "node server/server.js",
     "install": "cd server && npm install && cd ../client && npm install",
-    "build": "cd client && npm run build"
+    "build": "cd client && npm run build",
+    "start": "node server/server.js" 
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "mongoose": "^5.10.9",
+    "dotenv": "^8.2.0",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^8.5.1"
   }
 }
