@@ -1,14 +1,21 @@
-import dotenv from "dotenv";
+import express from 'express';
+import mongoose from 'mongoose';
+import dotenv from 'dotenv';
+
 dotenv.config();
 
+const app = express();
 const PORT = process.env.PORT || 5000;
-const MONGO_URI = process.env.MONGO_URI;
+console.log("mongoose =", mongoose);
 
-mongoose.connect(MONGO_URI, {
+// DB connect
+mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
-.then(() => {
-  app.listen(PORT, () => console.log(`Server running on ${PORT}`));
-})
-.catch((err) => console.error("MongoDB connection failed:", err));
+.then(() => console.log("✅ MongoDB connected"))
+.catch((err) => console.error("❌ DB connection failed:", err));
+
+app.get('/', (req, res) => res.send('API Running...'));
+
+app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
