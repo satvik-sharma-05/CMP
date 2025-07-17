@@ -114,92 +114,100 @@ const ColleagueTable = ({
         </TableHead>
 
         <TableBody>
-          {colleagues.map((colleague) => (
-            <TableRow
-              key={colleague._id}
-              sx={{
-                opacity: colleague.availability?.status === 'Deactivated' ? 0.5 : 1,
-                transition: 'opacity 0.4s ease'
-              }}
-            >
-              <TableCell>
-                <Box display="flex" alignItems="center">
-                  <Avatar sx={{ mr: 1 }}>
-                    {colleague.firstName?.[0] || ''}
-                    {colleague.lastName?.[0] || ''}
-                  </Avatar>
-                  <Box>
-                    <Typography variant="subtitle2">{colleague.fullName || ''}</Typography>
-                    <Typography variant="body2" color="textSecondary">
-                      {colleague.email || ''}
-                    </Typography>
+          {Array.isArray(colleagues) && colleagues.length > 0 ? (
+            colleagues.map((colleague) => (
+              <TableRow
+                key={colleague._id}
+                sx={{
+                  opacity: colleague.availability?.status === 'Deactivated' ? 0.5 : 1,
+                  transition: 'opacity 0.4s ease'
+                }}
+              >
+                <TableCell>
+                  <Box display="flex" alignItems="center">
+                    <Avatar sx={{ mr: 1 }}>
+                      {colleague.firstName?.[0] || ''}
+                      {colleague.lastName?.[0] || ''}
+                    </Avatar>
+                    <Box>
+                      <Typography variant="subtitle2">{colleague.fullName || ''}</Typography>
+                      <Typography variant="body2" color="textSecondary">
+                        {colleague.email || ''}
+                      </Typography>
+                    </Box>
                   </Box>
-                </Box>
-              </TableCell>
+                </TableCell>
 
-              <TableCell>{colleague.experienceInYears ?? '-'} years</TableCell>
-              <TableCell>{colleague.managerId?.name || 'Not Assigned'}</TableCell>
+                <TableCell>{colleague.experienceInYears ?? '-'} years</TableCell>
+                <TableCell>{colleague.managerId?.name || 'Not Assigned'}</TableCell>
 
-              <TableCell>
-                {Array.isArray(colleague.skills) && colleague.skills.slice(0, 2).map((skill, index) => (
-                  <Chip key={index} label={skill} size="small" sx={{ mr: 0.5 }} />
-                ))}
-                {Array.isArray(colleague.skills) && colleague.skills.length > 2 && (
+                <TableCell>
+                  {Array.isArray(colleague.skills) && colleague.skills.slice(0, 2).map((skill, index) => (
+                    <Chip key={index} label={skill} size="small" sx={{ mr: 0.5 }} />
+                  ))}
+                  {Array.isArray(colleague.skills) && colleague.skills.length > 2 && (
+                    <Chip
+                      label={`+${colleague.skills.length - 2} more`}
+                      size="small"
+                      color="default"
+                    />
+                  )}
+                </TableCell>
+
+                <TableCell>
                   <Chip
-                    label={`+${colleague.skills.length - 2} more`}
+                    label={colleague.billingStatus ? colleague.billingStatus.replace('_', ' ') : ''}
+                    color={getBillingStatusColor(colleague.billingStatus)}
                     size="small"
-                    color="default"
                   />
-                )}
-              </TableCell>
+                </TableCell>
 
-              <TableCell>
-                <Chip
-                  label={colleague.billingStatus ? colleague.billingStatus.replace('_', ' ') : ''}
-                  color={getBillingStatusColor(colleague.billingStatus)}
-                  size="small"
-                />
-              </TableCell>
+                <TableCell>
+                  <Chip
+                    label={
+                      colleague.availability?.status === 'Deactivated'
+                        ? 'Deactivated'
+                        : colleague.availability?.availableInDays > 0
+                          ? `${colleague.availability.status} (${colleague.availability.availableInDays} days)`
+                          : colleague.availability?.status || ''
+                    }
+                    color={
+                      colleague.availability?.status === 'Deactivated'
+                        ? 'default'
+                        : getAvailabilityColor(colleague.availability?.status)
+                    }
+                    variant={colleague.availability?.status === 'Deactivated' ? 'outlined' : 'filled'}
+                    size="small"
+                    sx={{
+                      fontStyle: colleague.availability?.status === 'Deactivated' ? 'italic' : 'normal'
+                    }}
+                  />
+                </TableCell>
 
-              <TableCell>
-                <Chip
-                  label={
-                    colleague.availability?.status === 'Deactivated'
-                      ? 'Deactivated'
-                      : colleague.availability?.availableInDays > 0
-                        ? `${colleague.availability.status} (${colleague.availability.availableInDays} days)`
-                        : colleague.availability?.status || ''
-                  }
-                  color={
-                    colleague.availability?.status === 'Deactivated'
-                      ? 'default'
-                      : getAvailabilityColor(colleague.availability?.status)
-                  }
-                  variant={colleague.availability?.status === 'Deactivated' ? 'outlined' : 'filled'}
-                  size="small"
-                  sx={{
-                    fontStyle: colleague.availability?.status === 'Deactivated' ? 'italic' : 'normal'
-                  }}
-                />
-              </TableCell>
+                <TableCell>
+                  {colleague.assignment?.name && colleague.assignment.name !== 'None'
+                    ? colleague.assignment.name
+                    : 'Unassigned'}
+                </TableCell>
 
-              <TableCell>
-                {colleague.assignment?.name && colleague.assignment.name !== 'None'
-                  ? colleague.assignment.name
-                  : 'Unassigned'}
-              </TableCell>
-
-              <TableCell>
-                <ActionMenu
-                  onView={() => onView(colleague)}
-                  onEdit={() => onEdit(colleague)}
-                  onDelete={() => onDelete(colleague)}
-                  onToggleStatus={() => onToggleStatus(colleague)}
-                  isDeactivated={colleague.availability?.status === 'Deactivated'}
-                />
+                <TableCell>
+                  <ActionMenu
+                    onView={() => onView(colleague)}
+                    onEdit={() => onEdit(colleague)}
+                    onDelete={() => onDelete(colleague)}
+                    onToggleStatus={() => onToggleStatus(colleague)}
+                    isDeactivated={colleague.availability?.status === 'Deactivated'}
+                  />
+                </TableCell>
+              </TableRow>
+            ))
+          ) : (
+            <TableRow>
+              <TableCell colSpan={8} align="center">
+                No colleagues found.
               </TableCell>
             </TableRow>
-          ))}
+          )}
         </TableBody>
       </Table>
     </TableContainer>
