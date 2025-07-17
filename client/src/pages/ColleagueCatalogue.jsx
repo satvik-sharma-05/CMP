@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
   Container, Typography, Box, Button, Alert, Dialog, DialogTitle,
-
   DialogContent, DialogActions, TextField, Paper, Snackbar, MenuItem, Select, InputLabel, FormControl, 
   Grid,
 } from '@mui/material';
@@ -58,7 +57,8 @@ const ColleagueCatalogue = () => {
       setLoading(true);
       const params = { ...filters, sortBy: orderBy, sortOrder: order };
       const response = await api.get('/colleagues', { params });
-      setColleagues(response.data);
+      console.log('colleagues data:', colleagues);
+      setColleagues(response.data.colleagues);
     } catch (err) {
       setError('Failed to fetch colleagues');
     } finally {
