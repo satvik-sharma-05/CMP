@@ -22,10 +22,19 @@ const colleagueSchema = new mongoose.Schema({
     required: true,
     min: 0
   },
-  skills: [{
-    type: String,
-    trim: true
-  }],
+  skills: {
+    type: [String],
+    trim: true,
+    default: [],
+    validate: {
+      validator: function (arr) {
+        return arr.every(skill => typeof skill === 'string');
+      },
+      message: 'Each skill must be a string'
+    }
+  }
+, 
+
   managerId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Manager', // ✅ case-sensitive match to model name
