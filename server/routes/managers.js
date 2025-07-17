@@ -25,10 +25,10 @@ router.post('/', async (req, res) => {
 // ✅ 2. Get All Managers
 router.get('/', async (req, res) => {
   try {
-    const managers = await Manager.find({}, 'email _id username');
-    res.status(200).json(managers);
+    const managers = await Manager.find({}, '_id username email');
+    res.status(200).json(managers); // ✅ Send array directly
   } catch (err) {
-    console.error('❌ Failed to fetch managers:', err);
+    console.error('❌ Manager fetch failed:', err);
     res.status(500).json({ message: 'Failed to fetch managers' });
   }
 });

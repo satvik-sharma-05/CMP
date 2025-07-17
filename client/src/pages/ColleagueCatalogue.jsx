@@ -69,7 +69,7 @@ const ColleagueCatalogue = () => {
         console.warn('⚠️ Expected array but got:', rawData);
         setColleagues([]);
       }
-    } catch (err) {   
+    } catch (err) {
       console.error('❌ Fetch error:', err);
       setError('Failed to fetch colleagues');
       setColleagues([]); // fallback
@@ -82,11 +82,19 @@ const ColleagueCatalogue = () => {
   const fetchManagers = async () => {
     try {
       const res = await api.get('/managers');
-      setManagers(res.data);
+      console.log('✅ Managers response:', res.data); // Add this line
+      if (Array.isArray(res.data)) {
+        setManagers(res.data);
+      } else {
+        console.warn("⚠️ Expected array but got:", res.data);
+        setManagers([]);
+      }
     } catch (err) {
+      console.error('❌ Failed to fetch managers:', err); // Log full error
       setError('Failed to load managers');
     }
   };
+
 
   const handleRequestSort = (_, property) => {
     const isAsc = orderBy === property && order === 'asc';

@@ -3,13 +3,12 @@ import axios from 'axios';
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 console.log("API_URL =", API_URL);
 
-
-
 const api = axios.create({
   baseURL: API_URL,
+  withCredentials: true, // ✅ Enable cookies / CORS credentials
 });
 
-// Add token to requests
+// ✅ Add token to every request (via headers)
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
@@ -18,12 +17,10 @@ api.interceptors.request.use(
     }
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
 
-// Handle token expiration
+// ✅ Handle expired tokens
 api.interceptors.response.use(
   (response) => response,
   (error) => {
