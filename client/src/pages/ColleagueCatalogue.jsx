@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {
   Container, Typography, Box, Button, Alert, Dialog, DialogTitle,
-  DialogContent, DialogActions, TextField, Paper, Snackbar, MenuItem, Select, InputLabel, FormControl, 
+  DialogContent, DialogActions, TextField, Paper, Snackbar, MenuItem, Select, InputLabel, FormControl,
   Grid,
 } from '@mui/material';
 import { Add, GetApp } from '@mui/icons-material';
@@ -57,14 +57,27 @@ const ColleagueCatalogue = () => {
       setLoading(true);
       const params = { ...filters, sortBy: orderBy, sortOrder: order };
       const response = await api.get('/colleagues', { params });
-      console.log('colleagues data:', colleagues);
-      setColleagues(response.data.colleagues);
-    } catch (err) {
+
+      console.log('✅ API Response:', response.data);
+
+      // Important: make sure response.data.colleagues is an array
+      const rawData = response.data.colleagues;
+
+      if (Array.isArray(rawData)) {
+        setColleagues(rawData);
+      } else {
+        console.warn('⚠️ Expected array but got:', rawData);
+        setColleagues([]);
+      }
+    } catch (err) {   
+      console.error('❌ Fetch error:', err);
       setError('Failed to fetch colleagues');
+      setColleagues([]); // fallback
     } finally {
       setLoading(false);
     }
   };
+
 
   const fetchManagers = async () => {
     try {
@@ -240,48 +253,48 @@ const ColleagueCatalogue = () => {
         />
 
         {viewMode === 'table' ? (
-  <ColleagueTable
-    colleagues={colleagues}
-    loading={loading}
-    order={order}
-    orderBy={orderBy}
-    onRequestSort={handleRequestSort}
-    onView={(c) => alert(`${c.firstName} ${c.lastName}\nEmail: ${c.email}`)}
-    onEdit={(colleague) => {
-      setEditColleague({ ...colleague });
-      setOpenEdit(true);
-    }}
-    onDelete={handleDelete}
-    onToggleStatus={handleToggleStatus}
-  />
-) : (
-  <Grid container spacing={2}>
-    {colleagues.map((colleague) => (
-      <Grid item xs={12} md={6} lg={4} key={colleague._id}>
-        <Paper elevation={3} sx={{ p: 2 }}>
-          <Typography variant="h6">{colleague.fullName}</Typography>
-          <Typography variant="body2">{colleague.email}</Typography>
-          <Typography variant="body2">Experience: {colleague.experienceInYears} years</Typography>
-          <Typography variant="body2">Manager: {colleague.managerId?.name || 'N/A'}</Typography>
-          <Typography variant="body2">Billing: {colleague.billingStatus}</Typography>
-          <Typography variant="body2">Status: {colleague.availability.status}</Typography>
-          <Typography variant="body2">Assignment: {colleague.assignment.name}</Typography>
-          <Box sx={{ mt: 1, display: 'flex', gap: 1 }}>
-            <Button size="small" onClick={() => alert(`${colleague.firstName} ${colleague.lastName}`)}>View</Button>
-            <Button size="small" onClick={() => {
+          <ColleagueTable
+            colleagues={colleagues}
+            loading={loading}
+            order={order}
+            orderBy={orderBy}
+            onRequestSort={handleRequestSort}
+            onView={(c) => alert(`${c.firstName} ${c.lastName}\nEmail: ${c.email}`)}
+            onEdit={(colleague) => {
               setEditColleague({ ...colleague });
               setOpenEdit(true);
-            }}>Edit</Button>
-            <Button size="small" color="error" onClick={() => handleDelete(colleague)}>Delete</Button>
-            <Button size="small" onClick={() => handleToggleStatus(colleague)}>
-              {colleague.availability.status === 'Deactivated' ? 'Activate' : 'Deactivate'}
-            </Button>
-          </Box>
-        </Paper>
-      </Grid>
-    ))}
-  </Grid>
-)}
+            }}
+            onDelete={handleDelete}
+            onToggleStatus={handleToggleStatus}
+          />
+        ) : (
+          <Grid container spacing={2}>
+            {colleagues.map((colleague) => (
+              <Grid item xs={12} md={6} lg={4} key={colleague._id}>
+                <Paper elevation={3} sx={{ p: 2 }}>
+                  <Typography variant="h6">{colleague.fullName}</Typography>
+                  <Typography variant="body2">{colleague.email}</Typography>
+                  <Typography variant="body2">Experience: {colleague.experienceInYears} years</Typography>
+                  <Typography variant="body2">Manager: {colleague.managerId?.name || 'N/A'}</Typography>
+                  <Typography variant="body2">Billing: {colleague.billingStatus}</Typography>
+                  <Typography variant="body2">Status: {colleague.availability.status}</Typography>
+                  <Typography variant="body2">Assignment: {colleague.assignment.name}</Typography>
+                  <Box sx={{ mt: 1, display: 'flex', gap: 1 }}>
+                    <Button size="small" onClick={() => alert(`${colleague.firstName} ${colleague.lastName}`)}>View</Button>
+                    <Button size="small" onClick={() => {
+                      setEditColleague({ ...colleague });
+                      setOpenEdit(true);
+                    }}>Edit</Button>
+                    <Button size="small" color="error" onClick={() => handleDelete(colleague)}>Delete</Button>
+                    <Button size="small" onClick={() => handleToggleStatus(colleague)}>
+                      {colleague.availability.status === 'Deactivated' ? 'Activate' : 'Deactivate'}
+                    </Button>
+                  </Box>
+                </Paper>
+              </Grid>
+            ))}
+          </Grid>
+        )}
 
 
 
