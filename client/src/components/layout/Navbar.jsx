@@ -45,6 +45,7 @@ const Navbar = () => {
           sx={{ flexGrow: 1, cursor: 'pointer' }}
           onClick={() => navigate('/dashboard')}
         >
+          <img src="./src/assets/logo.png" alt="CMP Logo" style={{ width: 40, marginRight: 8 }} />
           Colleague Management Portal
         </Typography>
         <Button

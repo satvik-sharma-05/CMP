@@ -7,7 +7,6 @@ const getAllColleagues = async (req, res) => {
 
     let query = {};
 
-    // Search functionality
     if (search) {
       query.$or = [
         { firstName: { $regex: search, $options: 'i' } },
@@ -16,14 +15,12 @@ const getAllColleagues = async (req, res) => {
       ];
     }
 
-    // Filters
     if (skill) query.skills = { $in: [skill] };
     if (availability) query['availability.status'] = availability;
     if (billing) query.billingStatus = billing;
 
     let colleaguesQuery = Colleague.find(query).populate('managerId', 'name email');
 
-    // Sorting
     if (sortBy) {
       const order = sortOrder === 'desc' ? -1 : 1;
       colleaguesQuery = colleaguesQuery.sort({ [sortBy]: order });
@@ -31,11 +28,12 @@ const getAllColleagues = async (req, res) => {
 
     const colleagues = await colleaguesQuery;
 
-    res.json({ colleagues });
+    res.json({ colleagues }); // ✅ fixed here
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
+
 
 const getColleagueById = async (req, res) => {
   try {
@@ -45,7 +43,8 @@ const getColleagueById = async (req, res) => {
       return res.status(404).json({ message: 'Colleague not found' });
     }
 
-    res.json(colleague);
+    res.json({ colleague });  // ✅ wrapped in object
+
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
@@ -58,9 +57,9 @@ const createColleague = async (req, res) => {
     const colleague = await Colleague.create(req.body);
     await colleague.populate('managerId', 'name email');
 
-    res.status(201).json(colleague);
+    res.status(201).json({ colleague });
   } catch (error) {
-    console.error("Create Colleague Error:", error); // 👈 Add this
+    console.error("Create Colleague Error:", error);
     res.status(400).json({ message: 'Validation error', error: error.message });
   }
 };
@@ -78,7 +77,7 @@ const updateColleague = async (req, res) => {
     if (!updated) {
       return res.status(404).json({ message: 'Colleague not found' });
     }
-    res.json(updated);
+    res.json({ colleague: updated });
   } catch (error) {
     res.status(400).json({ message: 'Update failed', error: error.message });
   }
@@ -101,7 +100,7 @@ const deleteColleague = async (req, res) => {
 };
 const exportColleaguesCSV = async (req, res) => {
   try {
-    const colleagues = await Colleague.find().lean(); // no Mongoose doc
+    const colleagues = await Colleague.find().populate('managerId', 'name').lean();
     const fields = [
       'firstName',
       'lastName',
