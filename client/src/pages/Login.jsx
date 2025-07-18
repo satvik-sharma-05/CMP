@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-
+import logo from '../assets/logo.png'; // adjust relative path correctly
 const Login = () => {
   const [credentials, setCredentials] = useState({
     username: '',
@@ -49,7 +49,7 @@ const Login = () => {
     <Container maxWidth="sm">
       <Paper elevation={3} sx={{ p: 4, mt: 8 }}>
         <Typography variant="h4" gutterBottom align="center">
-          <img src="./src/assets/logo.png" alt="CMP Logo" style={{ width: 100, marginBottom: 16 }} />
+            <img src={logo} alt="CMP Logo" style={{ width: 50, height: 50, marginLeft: 5,marginRight:5 }} />
           CMP Login
         </Typography>
         <Typography variant="subtitle1" gutterBottom align="center">
