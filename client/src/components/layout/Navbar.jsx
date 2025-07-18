@@ -51,16 +51,17 @@ const Navbar = () => {
             alt="CMP Logo"
             onClick={() => navigate('/dashboard')}
             sx={{
-              width: 50,
-              height: 50,
-              marginLeft: 1,
-              marginRight: 6,
+              width: '40px',
+              height: '40px',
+              marginLeft: '8px',
+              marginRight: '48px',
+              marginTop: '5px',
               borderRadius: '50%',
-              objectFit: 'cover',
-              overflow: 'hidden',
-              border: '2px solid #ccc',
+              objectFit: 'scale-down',
+              overflow: 'scroll',
+              border: '2px solid rgb(164 164 164)',
               cursor: 'pointer',
-              transform: 'scale(2)',
+              transform: 'scale(1.5)',
             }}
           />
           Colleague Management Portal

@@ -58,10 +58,8 @@ const Login = () => {
     height: 50,
     marginLeft: 1,
     marginRight: 6,
-    borderRadius: '50%',
     objectFit: 'cover',
     overflow: 'hidden',
-    border: '2px solid #ccc',
     cursor: 'pointer',
     transform: 'scale(2)',
   }}
