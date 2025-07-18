@@ -48,8 +48,9 @@ const Login = () => {
   return (
     <Container maxWidth="sm">
       <Paper elevation={3} sx={{ p: 4, mt: 8 }}>
+        <img src={logo} alt="CMP Logo" style={{ scale: 2, width: 50, height: 50, marginLeft: 5, marginRight: 50 }} />
+
         <Typography variant="h4" gutterBottom align="center">
-            <img src={logo} alt="CMP Logo" style={{ width: 50, height: 50, marginLeft: 5,marginRight:5 }} />
           CMP Login
         </Typography>
         <Typography variant="subtitle1" gutterBottom align="center">

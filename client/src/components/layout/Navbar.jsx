@@ -13,7 +13,7 @@ import {
 import { AccountCircle, Dashboard, People } from '@mui/icons-material';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate, useLocation } from 'react-router-dom';
-
+import logo from '../../assets/logo.png'; // adjust relative path correctly
 const Navbar = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
@@ -45,7 +45,7 @@ const Navbar = () => {
           sx={{ flexGrow: 1, cursor: 'pointer' }}
           onClick={() => navigate('/dashboard')}
         >
-          <img src="./src/assets/logo.png" alt="CMP Logo" style={{ width: 40, marginRight: 8 }} />
+          <img src={logo} alt="CMP Logo" style={{ scale: 2, width: 50, height: 50, marginLeft: 5, marginRight: 50 }} />
           Colleague Management Portal
         </Typography>
         <Button
