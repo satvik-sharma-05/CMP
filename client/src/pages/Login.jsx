@@ -48,8 +48,24 @@ const Login = () => {
   return (
     <Container maxWidth="sm">
       <Paper elevation={3} sx={{ p: 4, mt: 8 }}>
-        <img src={logo} alt="CMP Logo" style={{ scale: 2, width: 50, height: 50, marginLeft: 5, marginRight: 50 }} />
-
+<Box
+  component="img"
+  src={logo}
+  alt="CMP Logo"
+  onClick={() => navigate('/dashboard')}
+  sx={{
+    width: 50,
+    height: 50,
+    marginLeft: 1,
+    marginRight: 6,
+    borderRadius: '50%',
+    objectFit: 'cover',
+    overflow: 'hidden',
+    border: '2px solid #ccc',
+    cursor: 'pointer',
+    transform: 'scale(2)',
+  }}
+/>
         <Typography variant="h4" gutterBottom align="center">
           CMP Login
         </Typography>
